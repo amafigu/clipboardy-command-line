@@ -1,3 +1,4 @@
+import { copy } from "copy-paste"
 import WebSocket from "ws"
 
 let copiedData = ""
@@ -20,33 +21,32 @@ process.stdin.on("end", () => {
   const command = process.argv[2]
 
   ws.on("open", function open() {
-    if (command === "copy") {
+    if (command === "paste") {
+      ws.send(
+        JSON.stringify({
+          type: MessageType.Retrieve,
+          id: 0,
+        })
+      )
+    } else if (command === "copy") {
       ws.send(
         JSON.stringify({
           type: MessageType.NewTextItem,
           text: copiedData,
         })
       )
-    } else if (command === "paste") {
-      ws.send(
-        JSON.stringify({
-          type: MessageType.Retrieve,
-          text: copiedData,
-        })
-      )
+      process.exit(0)
     }
   })
 })
 
 ws.on("message", (data: string) => {
   const response = JSON.parse(data)
+  console.log("response ", response)
   switch (response.type) {
     case MessageType.NewTextItem:
-      console.log(`Received new text item with ID: ${response.id}`)
-      break
-    case MessageType.Retrieve:
-      console.log(`Your clipboard content: ${response.text}`)
-      break
+      copy(response.text)
+      process.exit(0)
     default:
       console.log("Received:", response)
       break
