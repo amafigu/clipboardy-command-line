@@ -17,7 +17,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "copy-paste": "^1.5.3",
     "ws": "^8.14.2"
   }
 }
