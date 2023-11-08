@@ -5,6 +5,7 @@ let copiedData = ""
 enum MessageType {
   NewTextItem = "newTextItem",
   Retrieve = "retrieve",
+  Error = "error",
 }
 
 const ws = new WebSocket("ws://localhost:3000")
@@ -43,6 +44,9 @@ ws.on("message", (data: string) => {
     case MessageType.NewTextItem:
       process.stdout.write(response.text)
       process.exit(0)
+    case MessageType.Error:
+      console.error(response.message)
+      process.exit(1)
     default:
       console.log("Received:", response)
       break
