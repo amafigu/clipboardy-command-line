@@ -23,8 +23,11 @@ ws.on("message", (data: string) => {
   switch (response.type) {
     case MessageType.NewTextItem:
       process.stdout.write(response.text)
+
+      process.exit(0)
     case MessageType.Error:
       console.error(response.message)
+
       process.exit(1)
     default:
       console.log("Received:", response)
