@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "paste": "ts-node --transpile-only index.ts paste",
-    "copy": "ts-node --transpile-only index.ts copy"
+    "build": "tsc",
+    "copy": "node ./dist/index.js copy",
+    "paste": "node ./dist/index.js paste"
   },
   "keywords": [],
   "author": "",
