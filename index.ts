@@ -1,62 +1,33 @@
-import WebSocket from "ws"
+const minimist = require("minimist")
 
-let copiedData = ""
+module.exports = () => {
+  const args = minimist(process.argv.slice(2))
 
-enum MessageType {
-  NewTextItem = "newTextItem",
-  Retrieve = "retrieve",
-  Error = "error",
-}
+  let cmd = args._[0] || "help"
 
-const ws = new WebSocket("ws://localhost:3000")
-
-const command = process.argv[2]
-ws.on("open", function open() {
-  if (command === "paste") {
-    ws.send(
-      JSON.stringify({
-        type: MessageType.Retrieve,
-        id: 0,
-      })
-    )
-  } else if (command === "copy") {
-    process.stdin.on("readable", () => {
-      let chunk: any
-      while ((chunk = process.stdin.read()) !== null) {
-        copiedData += chunk
-      }
-    })
-
-    process.stdin.on("end", () => {
-      ws.send(
-        JSON.stringify({
-          type: MessageType.NewTextItem,
-          text: copiedData,
-        })
-      )
-    })
+  if (args.version || args.v) {
+    cmd = "version"
   }
-})
 
-ws.on("message", (data: string) => {
-  const response = JSON.parse(data)
-  switch (response.type) {
-    case MessageType.NewTextItem:
-      process.stdout.write(response.text)
-      process.exit(0)
-    case MessageType.Error:
-      console.error(response.message)
-      process.exit(1)
+  if (args.help || args.h) {
+    cmd = "help"
+  }
+
+  switch (cmd) {
+    case "copy":
+      require("./cmds/copy.js")(args)
+      break
+    case "paste":
+      require("./cmds/paste.js")(args)
+      break
+    case "version":
+      require("./cmds/version.js")(args)
+      break
+    case "help":
+      require("./cmds/help.js")(args)
+      break
     default:
-      console.log("Received:", response)
+      require("./utils/error.js")(`"${cmd}" is not a valid command!`, true)
       break
   }
-})
-
-ws.on("error", (error) => {
-  console.error("WebSocket Error:", error)
-})
-
-ws.on("close", (code, reason) => {
-  console.log(`WebSocket closed. Code: ${code}, Reason: ${reason}`)
-})
+}
