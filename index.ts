@@ -23,12 +23,11 @@ module.exports = () => {
     case "version":
       require("./cmds/version.js")(args)
       break
-
     case "help":
       require("./cmds/help.js")(args)
       break
     default:
-      console.error(`"${cmd}" is not a valid command!`)
+      require("./utils/error.js")(`"${cmd}" is not a valid command!`, true)
       break
   }
 }

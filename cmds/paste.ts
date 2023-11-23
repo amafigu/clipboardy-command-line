@@ -1,3 +1,8 @@
+"use strict"
+
+import { MessageType } from "../utils/types"
+import { sendMessage } from "../utils/websocket"
+
 module.exports = (args: any) => {
-  console.log("paste command called")
+  sendMessage(MessageType.Retrieve, { id: 0 })
 }
