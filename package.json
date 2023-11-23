@@ -2,11 +2,15 @@
   "name": "clipboardy-command-line",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "bin": {
+    "clipboardy": "bin/clipboardy"
+  },
+  "main": "index.ts",
   "scripts": {
     "build": "tsc",
     "copy": "node ./dist/index.js copy",
-    "paste": "node ./dist/index.js paste"
+    "paste": "node ./dist/index.js paste",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +23,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "minimist": "^1.2.8",
     "ws": "^8.14.2"
   }
 }
